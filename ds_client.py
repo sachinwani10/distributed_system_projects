@@ -19,7 +19,8 @@ class Client:
         self.user_input = user_input
         self.result = 0
         self.initial = 1
-        self.f = open("log.txt", "w")
+        self.logname = self.name + "_log" + ".txt"
+        self.f = open(self.logname, "w")
 
         try:
             host = '127.0.0.1'
@@ -96,7 +97,7 @@ class Client:
             else:
                 operation = user_choice
                 print("Initial value: " + str(self.initial))
-                self.f = open("log.txt", "a")
+                self.f = open(self.logname, "a")
                 self.f.write(operation + "\n")
                 self.f.close()
                 self.calculator(operation)
@@ -140,6 +141,7 @@ class PollHandler(Thread):
         self.name = name
         self.f = f
         self.s = s
+        self.logname = self.name + "_log" + ".txt"
 
     def run(self):
         while True:
@@ -147,9 +149,9 @@ class PollHandler(Thread):
             if data:
                 print(data)
                 # break
-            if os.path.exists("log.txt"):
+            if os.path.exists(self.logname):
                 # Send number of lines in log to the server
-                self.f = open("log.txt", "r")
+                self.f = open(self.logname, "r")
                 count = len(self.f.readlines())
                 self.s.send(str(count).encode())
                 self.f.close()
@@ -159,7 +161,7 @@ class PollHandler(Thread):
                 print(data)
 
                 # Send all the operations to the server in string
-                self.f = open("log.txt", "r")
+                self.f = open(self.logname, "r")
                 data = self.f.readlines()
                 str1 = ''.join(data)
                 self.f.close()
@@ -167,7 +169,7 @@ class PollHandler(Thread):
                 self.s.send(str1.encode())
 
                 # clear the log after all operations are sent to server
-                os.remove("log.txt")
+                os.remove(self.logname)
             else:
                 msg = "log is empty"
                 self.s.send(msg.encode())
