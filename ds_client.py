@@ -108,30 +108,30 @@ class Client:
             print("Error")
 
 
-class ManageLog:
-    def clear_log(self):
-        if os.path.exists("log.txt"):
-            os.remove("log.txt")
-            print("\nLog Cleared")
-        else:
-            print("\nLog is empty")
-
-
-    def print_log(self):
-        if os.path.exists("log.txt"):
-            f = open("log.txt", "r")
-            print("\n-------LOG-------")
-            for line in f:
-                if(line != ''):
-                    print(line)
-                else:
-                    print("Log Empty\n")
-            f.close()
-            print("-------END-------")
-        else:
-            print("\n-------LOG-------")
-            print("\nLog is empty\n")
-            print("-------END-------")
+# class ManageLog:
+#     def clear_log(self):
+#         if os.path.exists("log.txt"):
+#             os.remove("log.txt")
+#             print("\nLog Cleared")
+#         else:
+#             print("\nLog is empty")
+#
+#
+#     def print_log(self):
+#         if os.path.exists("log.txt"):
+#             f = open("log.txt", "r")
+#             print("\n-------LOG-------")
+#             for line in f:
+#                 if(line != ''):
+#                     print(line)
+#                 else:
+#                     print("Log Empty\n")
+#             f.close()
+#             print("-------END-------")
+#         else:
+#             print("\n-------LOG-------")
+#             print("\nLog is empty\n")
+#             print("-------END-------")
 
 
 class PollHandler(Thread):
