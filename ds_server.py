@@ -116,6 +116,10 @@ class ClientThread(Thread):
 
 
 class ServerHandler:
+    def __init__(self):
+        self.result = 0
+        self.initial = 1
+
     def run_server(self):
         """
         driver function
@@ -162,13 +166,14 @@ class ServerHandler:
         print([c.get_client_name() for c in threads])
 
     def poll_client(self):
-        result = 0
-        initial = 1
         for c in threads:
-            result = c.receive_operations(initial)
-            initial = result
-        print(result)
-
+            self.result = c.receive_operations(self.initial)
+            self.initial = self.result
+        print("Final Result: " + str(self.result))
+        print("New Initial: " + str(self.result))
+        msg = str(self.result)
+        for c in threads:
+            c.conn.send(msg.encode())
 # right now program is working correctly for one client. However it is not able to detect if log is empty for the client
 # if log is empty then do not perform any operation and just abort for that client. R.E.: DONE
 # you also need to create file with client specific name, so that each client will have his own log and the program

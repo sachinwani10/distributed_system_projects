@@ -142,6 +142,7 @@ class PollHandler(Thread):
         self.f = client.f
         self.s = client.s
         self.logname = self.name + "_log" + ".txt"
+        self.client = client
 
     def run(self):
         while True:
@@ -170,6 +171,13 @@ class PollHandler(Thread):
 
                 # clear the log after all operations are sent to server
                 os.remove(self.logname)
+
+                # Receive new Initial from server
+                data = str(self.s.recv(1024).decode())
+                self.client.initial = int(data)
+
+                # notifying on gui abt changed value of Initial
+                print("Initial value changed to: " + str(self.client.initial))
             else:
                 msg = "log is empty"
                 self.s.send(msg.encode())
