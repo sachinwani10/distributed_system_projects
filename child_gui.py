@@ -6,7 +6,7 @@ Student ID: 1001563321
 from ds_client import Client
 import tkinter as tk
 import sys
-from ds_client import ManageLog
+# from ds_client import ManageLog
 
 
 class MainWindow(tk.Tk):

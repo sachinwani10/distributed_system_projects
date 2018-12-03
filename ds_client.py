@@ -87,7 +87,7 @@ class Client:
         try:
             user_choice = self.user_input.get()
             if user_choice == 'y':
-                serverPollHandler = PollHandler(self.f, self.name, self.s)
+                serverPollHandler = PollHandler(self)
                 serverPollHandler.start()
                 print("Enter The operations: ")
             elif user_choice == 'n':
@@ -136,11 +136,11 @@ class Client:
 
 class PollHandler(Thread):
 
-    def __init__(self, f, name, s):
+    def __init__(self, client):
         Thread.__init__(self)
-        self.name = name
-        self.f = f
-        self.s = s
+        self.name = client.name
+        self.f = client.f
+        self.s = client.s
         self.logname = self.name + "_log" + ".txt"
 
     def run(self):
@@ -148,7 +148,7 @@ class PollHandler(Thread):
             data = self.s.recv(1024).decode()
             if data:
                 print(data)
-                # break
+
             if os.path.exists(self.logname):
                 # Send number of lines in log to the server
                 self.f = open(self.logname, "r")

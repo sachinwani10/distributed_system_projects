@@ -170,6 +170,6 @@ class ServerHandler:
         print(result)
 
 # right now program is working correctly for one client. However it is not able to detect if log is empty for the client
-# if log is empty then do not perform any operation and just abort for that client.
+# if log is empty then do not perform any operation and just abort for that client. R.E.: DONE
 # you also need to create file with client specific name, so that each client will have his own log and the program
-# will be able to handle multiple clients
+# will be able to handle multiple clients. R.E.: DONE
