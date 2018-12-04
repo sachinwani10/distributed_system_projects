@@ -57,9 +57,8 @@ class ClientThread(Thread):
         print("notified client " + data + " of Successful Registration \n")
         self.conn.send(message.encode())
 
-        disconnection = ClientDisconnectionHandler(self)
-        disconnection.start()
-
+        # disconnection = ClientDisconnectionHandler(self)
+        # disconnection.start()
 
     def server_calculator(self, user_operation, initial):
         base_value = initial
@@ -102,7 +101,7 @@ class ClientThread(Thread):
         if data == 'log is empty':
             print("Log is empty for client: " + self.name)
             return 1
-
+        print("here: ", data)
         number_of_operations = int(data)
         msg = "Server Received " + str(number_of_operations) + " operations from Client " + self.name
         print(msg)
@@ -171,9 +170,17 @@ class ServerHandler:
         print([c.get_client_name() for c in threads])
 
     def poll_client(self):
+        clients_to_remove = []
         for c in threads:
-            self.result = c.receive_operations(self.initial)
+            try:
+                self.result = c.receive_operations(self.initial)
+            except Exception as e:
+                print("Could not receive: ", e)
+                print("For client: ", c.get_client_name())
+                clients_to_remove.append(c)
             self.initial = self.result
+
+        [threads.remove(c) for c in clients_to_remove]
         print("Final Result: " + str(self.result))
         print("New Initial: " + str(self.result))
         msg = str(self.result)
@@ -181,19 +188,19 @@ class ServerHandler:
             c.conn.send(msg.encode())
 
 
-class ClientDisconnectionHandler(Thread):
-    def __init__(self, client):
-        Thread.__init__(self)
-        self.client = client
-
-    def run(self):
-        while True:
-            data = str(self.client.conn.recv(1024).decode())
-            if data == 'stop':
-                self.client.conn.close()
-                print(self.client.name + " disconnected!\n")
-                self.client.stop()
-                break
-            else:
-                break
+# class ClientDisconnectionHandler(Thread):
+#     def __init__(self, client):
+#         Thread.__init__(self)
+#         self.client = client
+#
+#     def run(self):
+#         while True:
+#             data = str(self.client.conn.recv(1024).decode())
+#             if data == 'stop':
+#                 self.client.conn.close()
+#                 print(self.client.name + " disconnected!\n")
+#                 self.client.stop()
+#                 break
+#             else:
+#                 break
 

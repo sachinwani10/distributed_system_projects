@@ -85,23 +85,26 @@ class Client:
         try:
             user_choice = self.user_input.get()
             if user_choice == 'y':
-                msg = ' '
-                self.s.send(msg.encode())
+                # msg = 'sachin'
+                # self.s.send(msg.encode())
                 serverPollHandler = PollHandler(self)
                 serverPollHandler.start()
                 print("Enter The operations: ")
             elif user_choice == 'n':
                 msg = 'stop'
                 self.s.send(msg.encode())
+                self.s.close()
+                exit(1)
             else:
                 operation = user_choice
-                print("Initial value: " + str(self.initial))
-                self.f = open(self.logname, "a")
-                self.f.write(operation + "\n")
-                self.f.close()
-                self.calculator(operation)
-                print(operation)
-                print("Initial Changed to: " + str(self.result))
+                if user_choice != 'n':
+                    print("Initial value: " + str(self.initial))
+                    self.f = open(self.logname, "a")
+                    self.f.write(operation + "\n")
+                    self.f.close()
+                    self.calculator(operation)
+                    print(operation)
+                    print("Initial Changed to: " + str(self.result))
 
         except RuntimeError:
             print("Error")
