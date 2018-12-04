@@ -5,8 +5,6 @@ Student ID: 1001563321
 import socket
 import os
 from threading import Thread
-# from random import randrange
-# from time import sleep
 
 
 class Client:
@@ -87,14 +85,14 @@ class Client:
         try:
             user_choice = self.user_input.get()
             if user_choice == 'y':
+                msg = ' '
+                self.s.send(msg.encode())
                 serverPollHandler = PollHandler(self)
                 serverPollHandler.start()
                 print("Enter The operations: ")
             elif user_choice == 'n':
-                data = self.s.recv(1024).decode()
                 msg = 'stop'
                 self.s.send(msg.encode())
-                # break
             else:
                 operation = user_choice
                 print("Initial value: " + str(self.initial))
@@ -107,32 +105,6 @@ class Client:
 
         except RuntimeError:
             print("Error")
-
-
-# class ManageLog:
-#     def clear_log(self):
-#         if os.path.exists("log.txt"):
-#             os.remove("log.txt")
-#             print("\nLog Cleared")
-#         else:
-#             print("\nLog is empty")
-#
-#
-#     def print_log(self):
-#         if os.path.exists("log.txt"):
-#             f = open("log.txt", "r")
-#             print("\n-------LOG-------")
-#             for line in f:
-#                 if(line != ''):
-#                     print(line)
-#                 else:
-#                     print("Log Empty\n")
-#             f.close()
-#             print("-------END-------")
-#         else:
-#             print("\n-------LOG-------")
-#             print("\nLog is empty\n")
-#             print("-------END-------")
 
 
 class PollHandler(Thread):

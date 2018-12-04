@@ -57,11 +57,9 @@ class ClientThread(Thread):
         print("notified client " + data + " of Successful Registration \n")
         self.conn.send(message.encode())
 
-        # data = str(self.conn.recv(1024).decode())
-        # if data == 'stop':
-        #     self.conn.close()
-        #     print(self.name + " disconnected!\n")
-        #     self.stop()
+        disconnection = ClientDisconnectionHandler(self)
+        disconnection.start()
+
 
     def server_calculator(self, user_operation, initial):
         base_value = initial
@@ -104,10 +102,7 @@ class ClientThread(Thread):
         if data == 'log is empty':
             print("Log is empty for client: " + self.name)
             return 1
-        if data == 'stop':
-            self.conn.close()
-            print(self.name + " disconnected!\n")
-            self.stop()
+
         number_of_operations = int(data)
         msg = "Server Received " + str(number_of_operations) + " operations from Client " + self.name
         print(msg)
@@ -184,7 +179,21 @@ class ServerHandler:
         msg = str(self.result)
         for c in threads:
             c.conn.send(msg.encode())
-# right now program is working correctly for one client. However it is not able to detect if log is empty for the client
-# if log is empty then do not perform any operation and just abort for that client. R.E.: DONE
-# you also need to create file with client specific name, so that each client will have his own log and the program
-# will be able to handle multiple clients. R.E.: DONE
+
+
+class ClientDisconnectionHandler(Thread):
+    def __init__(self, client):
+        Thread.__init__(self)
+        self.client = client
+
+    def run(self):
+        while True:
+            data = str(self.client.conn.recv(1024).decode())
+            if data == 'stop':
+                self.client.conn.close()
+                print(self.client.name + " disconnected!\n")
+                self.client.stop()
+                break
+            else:
+                break
+
