@@ -57,6 +57,12 @@ class ClientThread(Thread):
         print("notified client " + data + " of Successful Registration \n")
         self.conn.send(message.encode())
 
+        # data = str(self.conn.recv(1024).decode())
+        # if data == 'stop':
+        #     self.conn.close()
+        #     print(self.name + " disconnected!\n")
+        #     self.stop()
+
     def server_calculator(self, user_operation, initial):
         base_value = initial
         number = int(user_operation.split(' ')[1])
@@ -98,6 +104,10 @@ class ClientThread(Thread):
         if data == 'log is empty':
             print("Log is empty for client: " + self.name)
             return 1
+        if data == 'stop':
+            self.conn.close()
+            print(self.name + " disconnected!\n")
+            self.stop()
         number_of_operations = int(data)
         msg = "Server Received " + str(number_of_operations) + " operations from Client " + self.name
         print(msg)

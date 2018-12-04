@@ -91,6 +91,7 @@ class Client:
                 serverPollHandler.start()
                 print("Enter The operations: ")
             elif user_choice == 'n':
+                data = self.s.recv(1024).decode()
                 msg = 'stop'
                 self.s.send(msg.encode())
                 # break
